@@ -2,102 +2,96 @@
 using namespace std ;
 class tree
 {
-    public : 
+    public :
         int value ;
         tree* left ;
         tree* right ;
-        
-        tree(int x)
-        {
-            value = x ;
-            left = nullptr ;
-            right = nullptr ;
-        }
+    
+    tree(int x)
+    {
+        value = x ;
+        left = nullptr ;
+        right = nullptr ;
+    }
 };
 
-/*
-void printBT(tree* root)
+void preBT(tree* &root)
 {
     if(root == nullptr)
-    {
         return ;
-    }
-        cout<<root -> value<<" ";
-        printBT(root -> left);
-        printBT(root -> right);
-    
+    cout<<root->value<<" ";
+    preBT(root -> left);
+    preBT(root -> right);
 }
-*/
 
-void printPreorderBT(tree* &root)
+void inBT(tree* &root)
 {
     if(root == nullptr)
-    {
         return ;
-    }
+    inBT(root -> left);
+    cout<<root->value<<" ";
+    inBT(root -> right);
+}
+
+void postBT(tree* &root)
+{
+    if(root == nullptr)
+        return ;
+    postBT(root -> left);
+    postBT(root -> right);
     cout<<root -> value<<" ";
-    printPreorderBT(root -> left);
-    printPreorderBT(root -> right);
-}
-
-void printPostBT(tree* &root)
-{
-    if(root == nullptr)
-    {
-        return ;
-    }
-    printPostBT(root -> left);
-    printPostBT(root -> right);
-    cout<<root -> value<<" ";
-}
-
-void printInorderBT(tree* &root)
-{
-    if(root == nullptr)
-    {
-        return ;
-    }
-    printInorderBT(root -> left);
-    cout<<root -> value<<" " ;
-    printInorderBT(root -> right);
 }
 
 int maxDepth(tree* &root)
 {
     if(root == nullptr)
-    {
         return 0 ;
-    }
     int lh = maxDepth(root -> left);
     int rh = maxDepth(root -> right);
     return 1+max(lh, rh);
 }
 
+int calculateSumPath(tree* &root, int& maxi)
+{
+    if(root == nullptr)
+        return 0 ;
+    int leftSum = calculateSumPath(root -> left, maxi);
+    int rightSum = calculateSumPath(root -> right, maxi);
+    int currentSum = root -> value + max(0, max(leftSum, rightSum));
+    maxi = max(maxi, max(currentSum, root -> value + leftSum + rightSum));
+    return currentSum ;
+}
+
+
+int maxPathSum(tree* &root)
+{
+    int maxi = INT_MIN ;
+    calculateSumPath(root, maxi);
+    return maxi ;
+}
+
+
 int main()
 {
-    tree* root = new tree(10);
-    root -> left = new tree(20);
-    root -> right = new tree(30);
-    root -> left -> right = new tree(40);
-    root -> left -> left = new tree(50);
-    root -> right -> left = new tree(60);
-    root -> right -> right = new tree(70);
-    
-    //printBT(root);
-    cout<<"The Binary tree in pre-order is : "<<endl ;
-    printPreorderBT(root);
+    tree* root = new tree(20);
+    root -> left = new tree(40);
+    root -> right = new tree(60);
+    root -> left -> right = new tree(80);
+    root -> right -> right = new tree(100);
+    cout<<"The pre-order traversal of the Binary tree is : "<<endl ;
+    preBT(root);
     cout<<endl ;
     
-    //print Postorder traversal BT
-    cout<<"The binary tree in post-order is: "<<endl ;
-    printPostBT(root);
+    cout<<"The inorder traversal of the Binary tree is : "<<endl ;
+    inBT(root);
     cout<<endl ;
     
-    //print Inorder traversal BT
-    cout<<"The binary tree in inorder traversal is: "<<endl ;
-    printInorderBT(root);
+    cout<<"The postorder traversal of the Binary tree is : "<<endl ;
+    postBT(root);
     cout<<endl ;
     
-    cout<<"Height of the Binary tree is : "<<maxDepth(root)<<endl ;
+    cout<<"The height of the Binary tree is : "<<maxDepth(root)<<endl ;
+    
+    cout<<"The maximum path sum of the binary tree is : "<<maxPathSum(root);
     return 0 ;
 }
