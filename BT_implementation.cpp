@@ -29,7 +29,7 @@ void printBT(tree* root)
 }
 */
 
-void printPreorderBT(tree* root)
+void printPreorderBT(tree* &root)
 {
     if(root == nullptr)
     {
@@ -40,7 +40,7 @@ void printPreorderBT(tree* root)
     printPreorderBT(root -> right);
 }
 
-void printPostBT(tree* root)
+void printPostBT(tree* &root)
 {
     if(root == nullptr)
     {
@@ -51,7 +51,7 @@ void printPostBT(tree* root)
     cout<<root -> value<<" ";
 }
 
-void printInorderBT(tree* root)
+void printInorderBT(tree* &root)
 {
     if(root == nullptr)
     {
@@ -60,6 +60,17 @@ void printInorderBT(tree* root)
     printInorderBT(root -> left);
     cout<<root -> value<<" " ;
     printInorderBT(root -> right);
+}
+
+int maxDepth(tree* &root)
+{
+    if(root == nullptr)
+    {
+        return 0 ;
+    }
+    int lh = maxDepth(root -> left);
+    int rh = maxDepth(root -> right);
+    return 1+max(lh, rh);
 }
 
 int main()
@@ -86,5 +97,7 @@ int main()
     cout<<"The binary tree in inorder traversal is: "<<endl ;
     printInorderBT(root);
     cout<<endl ;
+    
+    cout<<"Height of the Binary tree is : "<<maxDepth(root)<<endl ;
     return 0 ;
 }
